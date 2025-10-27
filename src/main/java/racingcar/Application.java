@@ -1,5 +1,11 @@
 package racingcar;
 import camp.nextstep.edu.missionutils.Console;
+import camp.nextstep.edu.missionutils.Randoms;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Application {
     public static void main(String[] args) {
@@ -12,8 +18,29 @@ public class Application {
         String attemptsInput = Console.readLine();
 
         // 3. 입력값 파싱 후 검증 수행
-        String[] names = parseNames(Input);
+        String[] names = parseNames(input);
         int attempts = parseAttempts(attemptsInput);
+
+        // 4. 자동차 생성
+        List<Car> cars = toCars(names);
+
+        // 실행 결과 헤더
+        System.out.println();
+        System.out.println("실행 결과");
+
+        // 5. 시도할 횟수만큼 진행 및 차수별 출력
+        for (int i = 0; i < attempts; i++) {
+            raceOnce(cars);
+            printRound(cars);
+            System.out.println();
+        }
+
+
+        // 6. 우승자 출력
+        String winners = findWinners(cars).stream()
+                .map(Car::name)
+                .collect(Collectors.joining(", "));
+        System.out.println("최종 우승자 : " + winners);
     }
 
     private static String[] parseNames(String input) {
@@ -41,5 +68,30 @@ public class Application {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("시도 횟수는 정수여야 합니다.");
         }
+    }
+
+    private static List<Car> toCars(String[] names) {
+        List<Car> cars = new ArrayList<>(names.length);
+        for (String n : names) cars.add(new Car(n));
+        return cars;
+    }
+
+    private static void raceOnce(List<Car> cars) {
+        for (Car car : cars) {
+            int r = Randoms.pickNumberInRange(0, 9);
+            car.moveIf(r);
+        }
+    }
+
+    private static void printRound(List<Car> cars) {
+        for (Car car : cars) {
+            System.out.println(car.name() + " : " + car.progress());
+        }
+    }
+
+    private static List<Car> findWinners(List<Car> cars) {
+        int max = cars.stream().max(Comparator.comparingInt(Car::position))
+                .map(Car::position).orElse(0);
+        return cars.stream().filter(c -> c.position() == max).collect(Collectors.toList());
     }
 }

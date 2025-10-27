@@ -1,3 +1,4 @@
+package racingcar;
 public final class Car {
     private final String name;
     private int position = 0;

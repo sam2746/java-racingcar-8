@@ -1,5 +1,11 @@
 package racingcar;
 import camp.nextstep.edu.missionutils.Console;
+import camp.nextstep.edu.missionutils.Randoms;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Application {
     public static void main(String[] args) {
@@ -12,7 +18,7 @@ public class Application {
         String attemptsInput = Console.readLine();
 
         // 3. 입력값 파싱 후 검증 수행
-        String[] names = parseNames(Input);
+        String[] names = parseNames(input);
         int attempts = parseAttempts(attemptsInput);
 
         // 4. 자동차 생성

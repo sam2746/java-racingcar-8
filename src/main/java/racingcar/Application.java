@@ -14,6 +14,20 @@ public class Application {
         // 3. 입력값 파싱 후 검증 수행
         String[] names = parseNames(Input);
         int attempts = parseAttempts(attemptsInput);
+
+        // 4. 자동차 생성
+        List<Car> cars = toCars(names);
+
+        // 실행 결과 헤더
+        System.out.println();
+        System.out.println("실행 결과");
+
+        // 5. 시도할 횟수만큼 진행 및 차수별 출력
+        for (int i = 0; i < attempts; i++) {
+            raceOnce(cars);
+            printRound(cars);
+            System.out.println();
+        }
     }
 
     private static String[] parseNames(String input) {
@@ -40,6 +54,25 @@ public class Application {
             return value;
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("시도 횟수는 정수여야 합니다.");
+        }
+    }
+
+    private static List<Car> toCars(String[] names) {
+        List<Car> cars = new ArrayList<>(names.length);
+        for (String n : names) cars.add(new Car(n));
+        return cars;
+    }
+
+    private static void raceOnce(List<Car> cars) {
+        for (Car car : cars) {
+            int r = Randoms.pickNumberInRange(0, 9);
+            car.moveIf(r);
+        }
+    }
+
+    private static void printRound(List<Car> cars) {
+        for (Car car : cars) {
+            System.out.println(car.name() + " : " + car.progress());
         }
     }
 }

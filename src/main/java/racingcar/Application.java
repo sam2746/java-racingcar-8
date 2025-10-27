@@ -28,6 +28,13 @@ public class Application {
             printRound(cars);
             System.out.println();
         }
+
+
+        // 6. 우승자 출력
+        String winners = findWinners(cars).stream()
+                .map(Car::name)
+                .collect(Collectors.joining(", "));
+        System.out.println("최종 우승자 : " + winners);
     }
 
     private static String[] parseNames(String input) {
@@ -74,5 +81,11 @@ public class Application {
         for (Car car : cars) {
             System.out.println(car.name() + " : " + car.progress());
         }
+    }
+
+    private static List<Car> findWinners(List<Car> cars) {
+        int max = cars.stream().max(Comparator.comparingInt(Car::position))
+                .map(Car::position).orElse(0);
+        return cars.stream().filter(c -> c.position() == max).collect(Collectors.toList());
     }
 }
